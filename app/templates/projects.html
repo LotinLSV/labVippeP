@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="mb-4 flex justify-between items-center">
+    <div>
+        <h2 class="text-2xl font-bold text-gray-900">Meus Projetos</h2>
+        <span class="text-sm text-gray-500">Projetos gerados pela IA ou manual</span>
+    </div>
+    <a href="/projects/new" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 text-sm font-medium">
+        + Novo Projeto
+    </a>
+</div>
+
+<div class="bg-white shadow overflow-hidden sm:rounded-md">
+    <ul role="list" class="divide-y divide-gray-200">
+        {% for p in projects %}
+        <li>
+            <a href="/projects/{{ p.id }}" class="block hover:bg-gray-50">
+                <div class="px-4 py-4 sm:px-6">
+                    <div class="flex items-center justify-between">
+                        <p class="text-lg font-medium text-indigo-600 truncate">
+                            {{ p.name }}
+                        </p>
+                        <div class="ml-2 flex-shrink-0 flex text-sm text-gray-500">
+                            TAP Gerado: {{ 'Sim (IA)' if p.tap_generated else 'Não (Manual)' }}
+                        </div>
+                    </div>
+                    <div class="mt-2 sm:flex sm:justify-between text-sm text-gray-500">
+                        <div class="sm:flex gap-6">
+                            <p class="flex items-center">
+                                <span class="font-semibold mr-1">Previsto:</span> 
+                                {{ p.start_date.strftime('%d/%m/%Y') if p.start_date else 'N/A' }} a {{ p.end_date.strftime('%d/%m/%Y') if p.end_date else 'N/A' }}
+                            </p>
+                            <p class="flex items-center">
+                                <span class="font-semibold text-blue-600 mr-1">Agendado (Tarefas):</span>
+                                {{ p.scheduled_start_date.strftime('%d/%m/%Y') if p.scheduled_start_date else 'N/A' }} a {{ p.scheduled_end_date.strftime('%d/%m/%Y') if p.scheduled_end_date else 'N/A' }}
+                            </p>
+                            <p class="flex items-center">
+                                <span class="font-semibold mr-1">Valor:</span> 
+                                R$ {{ "%.2f"|format(p.value) if p.value else '0.00' }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </li>
+        {% else %}
+        <li>
+            <div class="px-4 py-8 sm:px-6 text-center text-gray-500">
+                Nenhum projeto encontrado. Peça ao agente no chat para gerar um TAP ou crie manualmente.
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <div class="mb-4">
+        <a href="/admin/users" class="text-sm text-red-600 hover:text-red-800">&larr; Voltar para Usuários</a>
+    </div>
+
+    <div class="bg-white shadow overflow-hidden sm:rounded-xl border border-gray-200">
+        <div class="px-6 py-5 border-b bg-red-50 border-red-100">
+            <h3 class="text-lg leading-6 font-bold text-red-900 flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+                Cadastrar Novo Usuário (Painel Admin)
+            </h3>
+            <p class="mt-1 text-sm text-red-700">Crie contas e configure as instâncias do Laboratório VIPPE já na criação.</p>
+        </div>
+
+        <form action="/admin/users/new" method="POST" class="p-6 space-y-8">
+
+            <!-- Identity -->
+            <div>
+                <h4 class="text-sm font-bold text-gray-700 uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <span class="w-5 h-5 bg-red-100 rounded-full flex items-center justify-center text-red-600 text-xs font-bold">1</span>
+                    Identidade & Acesso
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Nome de Usuário</label>
+                        <input type="text" name="username" required placeholder="Ex: joao.silva"
+                            class="mt-1 block w-full rounded-lg border-gray-300 border shadow-sm focus:border-red-500 focus:ring-red-500 p-2.5 text-sm">
+                        <p class="text-xs text-gray-400 mt-1">Sem espaços. Será o login do usuário.</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Senha Inicial</label>
+                        <input type="password" name="password" required
+                            class="mt-1 block w-full rounded-lg border-gray-300 border shadow-sm focus:border-red-500 focus:ring-red-500 p-2.5 text-sm">
+                    </div>
+                </div>
+                <div class="mt-4 bg-gray-50 px-4 py-3 rounded-lg border">
+                    <div class="flex items-start">
+                        <div class="flex items-center h-5">
+                            <input id="is_admin" name="is_admin" type="checkbox" value="true"
+                                class="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-400 rounded">
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="is_admin" class="font-bold text-gray-900">Conceder Acesso de Administrador Pleno</label>
+                            <p class="text-gray-500 text-xs mt-0.5">Permite acessar o Painel Admin e criar novas contas. Use com cautela.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 bg-gray-50 px-4 py-3 rounded-lg border">
+                    <div class="flex items-start">
+                        <div class="flex items-center h-5">
+                            <input id="show_projects" name="show_projects" type="checkbox" value="true"
+                                class="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-400 rounded">
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="show_projects" class="font-bold text-gray-900">Habilitar Visualização de Projetos</label>
+                            <p class="text-gray-500 text-xs mt-0.5">Permite que este usuário veja a seção de Projetos no menu.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Services -->
+            <div>
+                <h4 class="text-sm font-bold text-gray-700 uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <span class="w-5 h-5 bg-red-100 rounded-full flex items-center justify-center text-red-600 text-xs font-bold">2</span>
+                    Instâncias de Serviços <span class="font-normal text-gray-400 normal-case">(opcionais — podem ser configuradas depois)</span>
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    <div class="p-4 rounded-lg border border-gray-200 bg-white">
+                        <label class="block text-sm font-bold text-gray-800 mb-1">🔁 n8n <span class="text-gray-400 font-normal text-xs">— Automação de Fluxos</span></label>
+                        <input type="url" name="n8n_link" placeholder="https://..." class="mt-1 block w-full rounded-lg border-gray-300 border shadow-sm focus:border-red-500 focus:ring-red-500 p-2.5 text-sm">
+                    </div>
+
+                    <div class="p-4 rounded-lg border border-gray-200 bg-white">
+                        <label class="block text-sm font-bold text-gray-800 mb-1">🤖 Type Bot <span class="text-gray-400 font-normal text-xs">— Criação de Agente de Bots</span></label>
+                        <input type="url" name="typebot_link" placeholder="https://..." class="mt-1 block w-full rounded-lg border-gray-300 border shadow-sm focus:border-red-500 focus:ring-red-500 p-2.5 text-sm">
+                    </div>
+
+                    <div class="p-4 rounded-lg border border-gray-200 bg-white">
+                        <label class="block text-sm font-bold text-gray-800 mb-1">📁 MinIO <span class="text-gray-400 font-normal text-xs">— Hospedagem de Arquivos</span></label>
+                        <input type="url" name="minion_link" placeholder="https://..." class="mt-1 block w-full rounded-lg border-gray-300 border shadow-sm focus:border-red-500 focus:ring-red-500 p-2.5 text-sm">
+                    </div>
+
+                    <div class="p-4 rounded-lg border border-gray-200 bg-white">
+                        <label class="block text-sm font-bold text-gray-800 mb-1">💜 Lovable <span class="text-gray-400 font-normal text-xs">— Gerador de Front-end</span></label>
+                        <input type="url" name="lovable_link" placeholder="https://..." class="mt-1 block w-full rounded-lg border-gray-300 border shadow-sm focus:border-red-500 focus:ring-red-500 p-2.5 text-sm">
+                    </div>
+
+                    <div class="p-4 rounded-lg border border-gray-200 bg-white">
+                        <label class="block text-sm font-bold text-gray-800 mb-1">☁️ Open Claw <span class="text-gray-400 font-normal text-xs">— I.A em Nuvem Gerenciada</span></label>
+                        <input type="url" name="open_claw_link" placeholder="https://..." class="mt-1 block w-full rounded-lg border-gray-300 border shadow-sm focus:border-red-500 focus:ring-red-500 p-2.5 text-sm">
+                    </div>
+
+                    <div class="p-4 rounded-lg border border-gray-200 bg-white">
+                        <label class="block text-sm font-bold text-gray-800 mb-1">📊 Quickcharts <span class="text-gray-400 font-normal text-xs">— Ferramenta de Relatórios</span></label>
+                        <input type="url" name="quickcharts_link" placeholder="https://..." class="mt-1 block w-full rounded-lg border-gray-300 border shadow-sm focus:border-red-500 focus:ring-red-500 p-2.5 text-sm">
+                    </div>
+
+                    <div class="p-4 rounded-lg border border-gray-200 bg-white">
+                        <label class="block text-sm font-bold text-gray-800 mb-1">✨ DiFy <span class="text-gray-400 font-normal text-xs">— Plataforma de I.A</span></label>
+                        <input type="url" name="dify_link" placeholder="https://..." class="mt-1 block w-full rounded-lg border-gray-300 border shadow-sm focus:border-red-500 focus:ring-red-500 p-2.5 text-sm">
+                    </div>
+
+                    <div class="p-4 rounded-lg border border-gray-200 bg-white">
+                        <label class="block text-sm font-bold text-gray-800 mb-1">💬 Chatwoot <span class="text-gray-400 font-normal text-xs">— Gerenciador de Conversas</span></label>
+                        <input type="url" name="chatwoot_link" placeholder="https://..." class="mt-1 block w-full rounded-lg border-gray-300 border shadow-sm focus:border-red-500 focus:ring-red-500 p-2.5 text-sm">
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex justify-end gap-3 pt-4 border-t">
+                <a href="/admin/users" class="bg-white text-gray-700 border border-gray-300 px-5 py-2 rounded-lg hover:bg-gray-50 font-medium shadow-sm transition-colors text-sm">Cancelar</a>
+                <button type="submit" class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 font-semibold shadow-sm transition-colors text-sm flex items-center gap-2">
+                    Cadastrar Usuário &rarr;
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

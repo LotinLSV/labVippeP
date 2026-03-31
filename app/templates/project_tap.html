@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="mb-4 flex items-center justify-between">
+    <a href="/projects/{{ project.id }}" class="text-sm text-indigo-600 hover:text-indigo-800">&larr; Voltar para {{ project.name }}</a>
+    <h2 class="text-xl font-bold text-gray-900">Detalhes Completos do TAP</h2>
+</div>
+
+<div class="bg-white shadow overflow-hidden sm:rounded-lg mb-6 max-w-5xl mx-auto">
+    <div class="px-4 py-5 sm:px-6 bg-gray-50 border-b">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">{{ project.name }}</h3>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500">Documento de Abertura do Projeto (TAP) expandido.</p>
+    </div>
+    <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+        <dl class="sm:divide-y sm:divide-gray-200">
+            <div class="py-4 sm:py-5 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Escopo</dt>
+                <dd class="mt-1 text-sm text-gray-900 whitespace-pre-wrap">{{ project.scope }}</dd>
+            </div>
+            {% if project.out_of_scope %}
+            <div class="py-4 sm:py-5 sm:px-6 bg-gray-50">
+                <dt class="text-sm font-medium text-gray-500">Fora do Escopo</dt>
+                <dd class="mt-1 text-sm text-gray-900 whitespace-pre-wrap">{{ project.out_of_scope }}</dd>
+            </div>
+            {% endif %}
+            {% if project.justification %}
+            <div class="py-4 sm:py-5 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Justificativa</dt>
+                <dd class="mt-1 text-sm text-gray-900 whitespace-pre-wrap">{{ project.justification }}</dd>
+            </div>
+            {% endif %}
+            {% if project.objectives %}
+            <div class="py-4 sm:py-5 sm:px-6 bg-gray-50">
+                <dt class="text-sm font-medium text-gray-500">Objetivos</dt>
+                <dd class="mt-1 text-sm text-gray-900 whitespace-pre-wrap">{{ project.objectives }}</dd>
+            </div>
+            {% endif %}
+            {% if project.requirements %}
+            <div class="py-4 sm:py-5 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Requisitos</dt>
+                <dd class="mt-1 text-sm text-gray-900 whitespace-pre-wrap">{{ project.requirements }}</dd>
+            </div>
+            {% endif %}
+            {% if project.assumptions %}
+            <div class="py-4 sm:py-5 sm:px-6 bg-gray-50">
+                <dt class="text-sm font-medium text-gray-500">Premissas</dt>
+                <dd class="mt-1 text-sm text-gray-900 whitespace-pre-wrap">{{ project.assumptions }}</dd>
+            </div>
+            {% endif %}
+            {% if project.restrictions %}
+            <div class="py-4 sm:py-5 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Restrições</dt>
+                <dd class="mt-1 text-sm text-gray-900 whitespace-pre-wrap">{{ project.restrictions }}</dd>
+            </div>
+            {% endif %}
+            {% if project.risks %}
+            <div class="py-4 sm:py-5 sm:px-6 bg-gray-50">
+                <dt class="text-sm font-medium text-gray-500">Riscos</dt>
+                <dd class="mt-1 text-sm text-gray-900 whitespace-pre-wrap">{{ project.risks }}</dd>
+            </div>
+            {% endif %}
+        </dl>
+    </div>
+</div>
+{% endblock %}

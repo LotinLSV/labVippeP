@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: vippe-portal
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DATABASE_URL
+        fromDatabase:
+          name: vippe-db
+          property: connectionString
+      - key: OPENAI_API_KEY
+        sync: false
+        
+databases:
+  - name: vippe-db
+    databaseName: vippedb
+    user: vippeuser

@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="mb-6">
+    <a href="/projects/{{ project.id }}" class="text-sm text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
+            </path>
+        </svg>
+        Voltar para Detalhes do Projeto
+    </a>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Project Summary for the User -->
+    <div class="lg:col-span-1 space-y-6">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+            <h2 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                <span class="text-2xl">📈</span> Analisador de Processos
+            </h2>
+            <p class="text-sm text-gray-500 mt-2">Este agente tem acesso total às tarefas do projeto e pode analisar o
+                status do seu processo operacional.</p>
+
+            <div class="mt-6 pt-6 border-t border-gray-100">
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Métricas do Projeto</p>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-gray-500">Progresso Geral</span>
+                            <span class="font-bold text-indigo-600">{{ project.percentage|default(0)|round(1) }}%</span>
+                        </div>
+                        <div class="w-full bg-gray-100 rounded-full h-2">
+                            <div class="bg-indigo-600 h-2 rounded-full flex-progress"
+                                data-progress="{{ project.percentage|default(0) }}"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl border border-gray-100">
+                        <span class="text-xs text-gray-500 font-medium">Nome do Projeto</span>
+                        <span class="text-xs font-bold text-gray-800">{{ project.name }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 bg-indigo-50 p-4 rounded-xl border border-indigo-100 text-xs text-indigo-800">
+                <p class="font-bold flex items-center gap-2 mb-1">💡 Dica do Gestor</p>
+                <p>Pergunte sobre atrasos, gargalos ou solicite um resumo do status atual para relatórios técnicos.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Agent Conversation Section -->
+    <div class="lg:col-span-2 flex flex-col space-y-4">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col h-[600px]">
+            <!-- Messages Header -->
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 rounded-t-2xl flex justify-between items-center">
+                <h3 class="font-bold text-gray-900 text-sm flex items-center gap-2">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                    Agente Online
+                </h3>
+            </div>
+
+            <!-- Messages List -->
+            <div id="project-chat-box"
+                class="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin scrollbar-thumb-gray-200">
+                {% if messages %}
+                {% for msg in messages %}
+                <div class="flex {% if msg.role == 'user' %}justify-end{% else %}justify-start{% endif %}">
+                    <div class="max-w-[85%] rounded-2xl px-5 py-4 text-sm shadow-sm
+                                {% if msg.role == 'user' %}
+                                    bg-indigo-600 text-white rounded-tr-none
+                                {% else %}
+                                    bg-gray-100 text-gray-800 rounded-tl-none border border-gray-200
+                                {% endif %}">
+                        <div
+                            class="prose prose-sm {% if msg.role == 'user' %}text-white prose-invert{% endif %} max-w-none message-md">
+                            {{ msg.content }}
+                        </div>
+                        <div class="text-[10px] mt-2 opacity-60 text-right">
+                            {{ msg.created_at.strftime("%H:%M") }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="h-full flex flex-col items-center justify-center text-center opacity-40 px-10">
+                    <span class="text-6xl mb-4">📋</span>
+                    <p class="text-sm font-medium">Inicie uma conversa para analisar o processo deste projeto.</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Chat Input Area -->
+            <div class="p-4 border-t border-gray-100">
+                <form action="/projects/{{ project.id }}/agent/message" method="POST" class="flex gap-2">
+                    <input type="text" name="message" required
+                        placeholder="Ex: Como está a evolução das tarefas atrasadas?"
+                        class="flex-1 rounded-xl border-gray-200 border bg-gray-50 focus:bg-white focus:ring-indigo-500 focus:border-indigo-500 p-3 text-sm transition-all outline-none">
+                    <button type="submit"
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-xl transition-colors shadow-sm flex items-center justify-center">
+                        <svg class="w-5 h-5 translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Auto-scroll to bottom
+                const chatBox = document.getElementById('project-chat-box');
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+                // Apply Progress Bars (Fixes Lint)
+                document.querySelectorAll('.flex-progress').forEach(function(el) {
+                    var progress = parseFloat(el.getAttribute('data-progress')) || 0;
+                    el.style.width = Math.round(progress) + '%';
+                });
+
+                // Render Markdown
+                document.querySelectorAll('.message-md').forEach(function(el) {
+                    el.innerHTML = marked.parse(el.textContent.trim());
+                });
+            });
+        </script>
+    </div>
+</div>
+
+<style>
+    /* Personalizando Markdown basico retornado pela IA */
+    .prose ul {
+        list-style-type: disc;
+        padding-left: 1.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .prose li {
+        margin-bottom: 0.25rem;
+    }
+
+    .prose p {
+        margin-bottom: 0.5rem;
+    }
+</style>
+{% endblock %}
